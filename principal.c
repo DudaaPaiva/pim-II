@@ -8,14 +8,14 @@
 #include <dos.h>
 
 struct Cliente{
-        char nome[50];
-        char cpf[11];
-        char aniversario[11];
-        char endereco[50];
-        char email[80];
-        char fone[17];
-        char dataRegistro[15];
-        char deletado;
+    char nome[50];
+    char cpf[11];
+    char aniversario[11];
+    char endereco[50];
+    char email[80];
+    char fone[17];
+    char dataRegistro[15];
+    char deletado;
 };
 
 struct Produto {
@@ -287,43 +287,30 @@ void cadastrarCliente()
     printf("Informe os dados para registro:\n");
 
     printf("\n\n\tE-mail:\t");
-    scanf("%s", cliente.email);
-    // fputs(cliente.email, arq);
-    fprintf(arq, "%s \n", cliente.email);
+    fflush(stdin);
+    gets(cliente.email);
 
     printf("\n\tNome:\t");
-    scanf("%s", cliente.nome);
-    // fputs(cliente.nome, arq);
-    fprintf(arq, "%s \n", cliente.nome);
+    scanf("%s", &cliente.nome);
 
     printf("\n\n\tCPF:\t");
-    scanf("%d", cliente.cpf);
-    // fputs(cliente.cpf, arq);
-    fprintf(arq, "%s \n", cliente.cpf);
+    scanf("%s", &cliente.cpf);
 
     printf("\n\n\tData de Registro:\t");
-    scanf("%s", cliente.dataRegistro);
-    // fputs(cliente.dataRegistro, arq);
-    fprintf(arq, "%s \n", cliente.dataRegistro);
+    scanf("%s", &cliente.dataRegistro);
 
     printf("\n\n\tAnivers�rio:\t");
-    scanf("%s", cliente.aniversario);
-    // fputs(cliente.aniversario, arq);
-    fprintf(arq, "%s \n", cliente.aniversario);
+    scanf("%s", &cliente.aniversario);
 
     printf("\n\n\tTelefone:\t");
-    scanf("%s", cliente.fone);
-    // fputs(cliente.fone, arq);
-    fprintf(arq, "%s \n", cliente.fone);
+    scanf("%s", &cliente.fone);
 
     printf("\n\n\tEndere�o:\t");
-    scanf("%s", cliente.endereco);
-    // fputs(cliente.endereco, arq);
-    fprintf(arq, "%s \n", cliente.endereco);
+    scanf("%s", &cliente.endereco);
 
     agora = time(NULL);
     strftime(cliente.dataRegistro, sizeof(cliente.dataRegistro), "%d.%m.%Y - %H:%M:%S", localtime( &agora ));   
-    retorno = fwrite(&cliente, sizeof(struct Cliente) ,1,arq);
+    retorno = fwrite(&cliente, sizeof(struct Cliente), 1 ,arq);
     if (retorno == 1)
     {
         fclose (arq);//fecha o arquivo cliente.txt 
@@ -417,35 +404,29 @@ void consultarCliente()
 
     struct Cliente cliente;
 
-    int cpf[11], encontrado = 0;
+    int encontrado = 0;
+    char cpf[11];
 
     printf("\nDigite o cpf do cliente: \n");
-    scanf("%d", &cpf);
-    printf("CPF informado e: %d\n", &cpf);
+    scanf("%s", &cpf);
+    printf("CPF informado e: %s\n", &cpf);
 
     while (fread (&cliente, sizeof(cliente), 1, arq))
     {
-        printf("eita vish\n");
-        fscanf(arq, "%d", cliente.cpf);
-        printf("%d", cliente.cpf);
-        printf ("DB: %d\n", cliente.cpf);
-        printf ("input: %d\n", cpf);
-        if (cpf == cliente.cpf) {
-            printf("Aqui foi");
+        printf("Seu nome e: %s, seu CPF e: %s\n", cliente.nome, cliente.cpf);
+        if (cpf == cliente.cpf)
+        {
+            printf("entrou no if de busca");
+            printf("Cpf %s --- Nome: %s --- \n", cliente.cpf, cliente.nome);
+            encontrado = 1;
+            system("pause>nul");
+            system("cls || clear");        
             montarMenu("Cliente");
         }
-        // if (nome == cliente.nome)
-        // {
-        //     printf("entrou no if de busca");
-        //     printf("Cpf %s --- Nome: %s --- \n", cliente.cpf, cliente.nome);
-        //     encontrado = 1;
-        //     system("pause>nul");
-        //     system("cls || clear");        
-        //     montarMenu("Cliente");
-        // }
+        printf("Buscando proximo cliente...\n");
     }
 
-    if (!encontrado)
+    if (encontrado == 0)
     {
         printf("\nCliente nao cadastrado!!\n");
         system("pause>nul");
