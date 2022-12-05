@@ -354,7 +354,36 @@ void alterarCliente()
             printf("Usuário encontrado!\n");
             printf("nome: %s\n cpf:%d\n email: %s\n", cliente.nome, cliente.cpf, cliente.email);
             printf("fone: %s\n data de registro: %s\n", cliente.fone, cliente.dataRegistro);
+            encontrado = 1;
+
+            fseek(arq, sizeof(struct Cliente)* - 1, SEEK_CUR);
+            printf("\nDigite o novo nome: \n");
+            fflush(stdin);
+            gets(cliente.nome);
+
+            printf("\nDigite o novo email: \n");
+            scanf("%s", &cliente.email);
+
+            
+            printf("\nDigite o novo telefone: \n");
+            scanf("%s", &cliente.fone);
+
+            fwrite(&cliente, sizeof(cliente), 1, arq);
+            fseek(arq, sizeof(cliente)* 0, SEEK_END);
+
+            printf("\n Dados do produto alterados com sucesso!");
+            system("pause>nul"); 
+            system("cls || clear");
+            montarMenu("Produtos");
         }
+    }
+
+    if (encontrado == 0)
+    {
+        printf("\nCodigo nao cadastrado!!\n");
+        system("pause>nul"); 
+        system("cls || clear");       
+        montarMenu("Produtos");
     }
 
     fclose(arq);
