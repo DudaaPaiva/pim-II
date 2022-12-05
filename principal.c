@@ -9,7 +9,7 @@
 
 struct Cliente{
     char nome[50];
-    char cpf[11];
+    int cpf;
     char aniversario[11];
     char endereco[50];
     char email[80];
@@ -294,7 +294,7 @@ void cadastrarCliente()
     scanf("%s", &cliente.nome);
 
     printf("\n\n\tCPF:\t");
-    scanf("%s", &cliente.cpf);
+    scanf("%d", &cliente.cpf);
 
     printf("\n\n\tData de Registro:\t");
     scanf("%s", &cliente.dataRegistro);
@@ -329,12 +329,37 @@ void cadastrarCliente()
     }
       
 }
+
 void alterarCliente()
 {
-    printf("Desenvolver a fun��o alterarCliente\n");
-    system("pause>nul");
-    return;
+    arq = fopen("cliente.txt", "r+b");
+    if (arq == NULL)
+    {
+        printf("Arquivo inexistente!");
+        system("pause>nul");
+        system("cls || clear");        
+        montarMenu("Cliente");
+    }
+
+    struct Cliente cliente;
+
+    int cpf, encontrado = 0;
+    printf ("\nDigite o CPF para encontrar o usuario: \n");
+    scanf ("%d", &cpf);
+    
+    while (fread (&cliente, sizeof(cliente), 1, arq))
+    {
+        if (cpf == cliente.cpf)
+        {
+            printf("Usuário encontrado!\n");
+            printf("nome: %s\n cpf:%d\n email: %s\n", cliente.nome, cliente.cpf, cliente.email);
+            printf("fone: %s\n data de registro: %s\n", cliente.fone, cliente.dataRegistro);
+        }
+    }
+
+    fclose(arq);
 }
+
 void excluirCliente()
 {
     arq = fopen("cliente.txt", "r+b");
@@ -364,7 +389,7 @@ void excluirCliente()
             if (certeza == 's')
             {
                 cliente.deletado = '*';        
-                fseek(arq,sizeof(struct Produto)*-1, SEEK_CUR);
+                fseek(arq,sizeof(struct Cliente)*-1, SEEK_CUR);
                 fwrite(&cliente, sizeof(cliente), 1, arq);
                 fseek(arq, sizeof(cliente)* 0, SEEK_END);
                 printf("\nCliente excluido com Sucesso! \n");
@@ -404,26 +429,21 @@ void consultarCliente()
 
     struct Cliente cliente;
 
-    int encontrado = 0;
-    char cpf[11];
+    int cpf, encontrado = 0;
 
     printf("\nDigite o cpf do cliente: \n");
-    scanf("%s", &cpf);
-    printf("CPF informado e: %s\n", &cpf);
+    scanf("%d", &cpf);
 
     while (fread (&cliente, sizeof(cliente), 1, arq))
     {
-        printf("Seu nome e: %s, seu CPF e: %s\n", cliente.nome, cliente.cpf);
         if (cpf == cliente.cpf)
         {
-            printf("entrou no if de busca");
-            printf("Cpf %s --- Nome: %s --- \n", cliente.cpf, cliente.nome);
+            printf("Cpf %d --- Nome: %s --- \n", cliente.cpf, cliente.nome);
             encontrado = 1;
             system("pause>nul");
             system("cls || clear");        
             montarMenu("Cliente");
         }
-        printf("Buscando proximo cliente...\n");
     }
 
     if (encontrado == 0)
