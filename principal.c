@@ -9,7 +9,7 @@
 
 struct Cliente{
     char nome[50];
-    int cpf;
+    int  cpf;
     char aniversario[11];
     char endereco[50];
     char email[80];
@@ -299,14 +299,18 @@ void cadastrarCliente()
     printf("\n\n\tData de Registro:\t");
     scanf("%s", &cliente.dataRegistro);
 
-    printf("\n\n\tAnivers�rio:\t");
+    printf("\n\n\tAniversario:\t");
     scanf("%s", &cliente.aniversario);
 
     printf("\n\n\tTelefone:\t");
     scanf("%s", &cliente.fone);
 
-    printf("\n\n\tEndere�o:\t");
+    printf("\n\n\tEndereco:\t");
     scanf("%s", &cliente.endereco);
+
+    // revisar
+    printf("\n\n\tDigite algo para continuar...\t");
+    scanf("%s", &cliente.deletado);
 
     agora = time(NULL);
     strftime(cliente.dataRegistro, sizeof(cliente.dataRegistro), "%d.%m.%Y - %H:%M:%S", localtime( &agora ));   
@@ -389,9 +393,11 @@ void alterarCliente()
     fclose(arq);
 }
 
-void excluirCliente()
+void excluirCliente() // em progresso
 {
+
     arq = fopen("cliente.txt", "r+b");
+
     if (arq == NULL)
     {
         printf("Arquivo inexistente!");
@@ -399,40 +405,51 @@ void excluirCliente()
         system("cls || clear");       
         montarMenu("Cliente");
     }
+
     struct Cliente cliente;
-    char nome, encontrado = 0;
-    char certeza;
-    printf ("\nDigite o nome do cliente que deseja EXCLUIR: \n");
-    scanf ("%s", &nome);
+    int encontrado = 0;
+    char certeza, cpf;
+    printf ("\nDigite o cpf do cliente que deseja EXCLUIR: \n");
+    scanf ("%d", &cpf);
 
     while (fread (&cliente, sizeof(cliente), 1, arq))
     {
-        if (nome == cliente.nome)
+        if (cpf == cliente.cpf)
         {
-            printf("Nome: %c \n\n",cliente.nome);
+            printf("Nome: %s \n\n", cliente.nome);
             encontrado = 1;
 
             printf("\nTem certeza que quer excluir cliente? s/n \n");
             fflush(stdin);
             scanf("%c", &certeza);
+
             if (certeza == 's')
             {
-                cliente.deletado = '*';        
-                fseek(arq,sizeof(struct Cliente)*-1, SEEK_CUR);
+                // cliente.deletado = '*';
+                // fseek(arq, sizeof(struct Cliente)*-1, SEEK_SET);
+                // fread(&cliente, sizeof(cliente), 1, arq);
+                cliente.deletado = '*';
+
+                fseek(arq, -sizeof(cliente), SEEK_CUR);
                 fwrite(&cliente, sizeof(cliente), 1, arq);
-                fseek(arq, sizeof(cliente)* 0, SEEK_END);
+
                 printf("\nCliente excluido com Sucesso! \n");
                 system("pause>nul"); 
-                system("cls || clear");       
+                system("cls || clear");
                 montarMenu("Cliente");
             }
             else if (certeza == 'n')
             {
-                system("cls || clear");       
+                system("cls || clear");  
                 montarMenu("Cliente");
+            } else if (certeza != 's' && certeza != 'n')
+            {
+                printf("Escolha entre 's' ou 'n'");
+                excluirCliente();
             }
         }
     }
+
     if (!encontrado)
     {
         printf ("\nCliente nao cadastrado!!\n");
@@ -440,8 +457,9 @@ void excluirCliente()
         system("cls || clear");       
         montarMenu("Cliente");
     }
+
     fclose(arq);
-    return;
+
 }
 
 void consultarCliente()
@@ -468,6 +486,7 @@ void consultarCliente()
         if (cpf == cliente.cpf)
         {
             printf("Cpf %d --- Nome: %s --- \n", cliente.cpf, cliente.nome);
+            // printf("%s", cliente.deletado);
             encontrado = 1;
             system("pause>nul");
             system("cls || clear");        
