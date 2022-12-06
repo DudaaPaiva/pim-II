@@ -337,6 +337,7 @@ void cadastrarCliente()
 void alterarCliente()
 {
     arq = fopen("cliente.txt", "r+b");
+
     if (arq == NULL)
     {
         printf("Arquivo inexistente!");
@@ -378,7 +379,7 @@ void alterarCliente()
             printf("\n Dados do produto alterados com sucesso!");
             system("pause>nul"); 
             system("cls || clear");
-            montarMenu("Produtos");
+            montarMenu("Cliente");
         }
     }
 
@@ -387,7 +388,7 @@ void alterarCliente()
         printf("\nCodigo nao cadastrado!!\n");
         system("pause>nul"); 
         system("cls || clear");       
-        montarMenu("Produtos");
+        montarMenu("Cliente");
     }
 
     fclose(arq);
@@ -563,6 +564,7 @@ void alterarProduto()
     }
 
     struct Produto produtos;
+
     int cod, encontrado = 0;
     printf ("\nDigite o codigo que deseja alterar: \n");
     scanf ("%d", &cod);
@@ -571,13 +573,14 @@ void alterarProduto()
     {
         if (cod == produtos.codigo)
         {
-            printf("Cod %d --- Descricao: %-8s --- Valor R$ %4.2f\n\n",produtos.codigo, produtos.descricao, produtos.valor);
+            printf("Cod %d --- Descricao: %-8s --- Valor R$ %4.2f\n\n", produtos.codigo, produtos.descricao, produtos.valor);
             encontrado = 1;
 
-            fseek(arq,sizeof(struct Produto)*-1, SEEK_CUR);
+            fseek(arq,sizeof(struct Produto)* - 1, SEEK_CUR);
             printf("\nDigite a nova descricao: \n");
             fflush(stdin);
             gets(produtos.descricao);
+
             printf("\nDigite o novo preco....: \n");
             scanf("%f", &produtos.valor);
 
@@ -677,7 +680,7 @@ void consultarProduto()
     {
         if (cod == produtos.codigo)
         {
-            printf("Cod %d --- Descricao: %-8s --- Valor R$ %4.2f\n", produtos.codigo, produtos.descricao, produtos.valor);
+            printf("Cod %d --- Descricao: %-8s --- Valor R$ %.2f\n", produtos.codigo, produtos.descricao, produtos.valor);
             encontrado = 1;
             system("pause>nul");
             system("cls || clear");        
