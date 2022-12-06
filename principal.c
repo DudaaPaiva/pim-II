@@ -19,10 +19,10 @@ struct Cliente{
 };
 
 struct Produto {
-    int codigo[11];
+    int codigo;
     char descricao[50];
     float valor;
-    char deletado; 
+    char deletado;
 };
 
 FILE *arq;              // declarar a vari�vel(*arq) como ponteiro do arquivo(FILE)
@@ -119,8 +119,8 @@ void gerenciarTela(int opcao)
 void sobre()
 {
     printf("\n\n\t\t\tPIM\n\n");
-    printf("\tAn�lise e Desenvolvimento de Sistemas\n\tPIM - Projeto Integrado Multidisciplinar\n");
-    printf("\tIntegrantes:\n\t\tD�bora Ishida\n\t\txxxxxxxxxxx\n\t\txxxxxxxxxxxxxx\n\t\txxxxxxxxxx");
+    printf("\tAnalise e Desenvolvimento de Sistemas\n\tPIM - Projeto Integrado Multidisciplinar\n");
+    printf("\tIntegrantes:\n\t\tEduarda Paiva\n\t\tCaio Viana\n\t\tTifany Mergulhao\n\t\tBianca Mateus\n\t\tJoao Vitor\n\t\t");
     getch();
 }
 #pragma endregion Fun��es Ut�is
@@ -131,11 +131,11 @@ void menuAdministrador()
     int continuar = 0;
     
     printf("\n\tMenu de Administrador\n\n");
-    printf("Informe uma op��o v�lida e aperte a tecla enter\n\n");
+    printf("Informe uma opcao valida e aperte a tecla enter\n\n");
     printf("1. Gerenciar Cliente\n");
     printf("2. Gerenciar Produto\n");
     printf("3. Gerenciar Pedidos\n");
-    printf("4. Gerenciar Relat�rios\n");
+    printf("4. Gerenciar Relatorios\n");
     printf("5. Criptografia\n");
     printf("6. Voltar ao Menu Principal\n");
 
@@ -148,7 +148,7 @@ void menuAdministrador()
             montarMenu("Cliente");
             break;
         case 2:            
-            montarMenu("Produto");         
+            montarMenu("Produtos");         
             break;
         case 3:            
             montarMenu("Pedidos");             
@@ -169,15 +169,15 @@ void menuAdministrador()
 }
 void montarMenu(const char* funcionalidade)
 {
-   int opcao = 0;
+    int opcao = 0;
     printf("\n\tMenu de Administrador - %s\n\n", funcionalidade);
-    printf("Informe uma op��o v�lida e aperte a tecla enter\n\n");
+    printf("Informe uma opcao valida e aperte a tecla enter\n\n");
     printf("1. Cadastrar %s\n", funcionalidade);
     printf("2. Alterar %s\n", funcionalidade);
     printf("3. Consultar %s\n", funcionalidade);
     printf("4. Excluir %s\n", funcionalidade);
     printf("5. Voltar ao Menu Principal\n"); 
-    system("pause>nul"); 
+    system("pause>nul");
     scanf("%i", &opcao);
     system("cls || clear");
     gerenciarMenu(opcao, funcionalidade); 
@@ -192,7 +192,7 @@ void gerenciarMenu(int opcao, const char* funcionalidade)
             {
                 cadastrarCliente();
             }
-            else if (funcionalidade == "Produto")
+            else if (funcionalidade == "Produtos")
             {
                 cadastrarProduto();
             }   
@@ -211,7 +211,7 @@ void gerenciarMenu(int opcao, const char* funcionalidade)
             {
                 alterarCliente();
             }
-            else if (funcionalidade == "Produto")
+            else if (funcionalidade == "Produtos")
             {
                 alterarProduto();
             }   
@@ -230,7 +230,7 @@ void gerenciarMenu(int opcao, const char* funcionalidade)
             {
                 consultarCliente();
             }
-            else if (funcionalidade == "Produto")
+            else if (funcionalidade == "Produtos")
             {
                 consultarProduto();
             }   
@@ -249,7 +249,7 @@ void gerenciarMenu(int opcao, const char* funcionalidade)
             {
                 excluirCliente();
             }
-            else if (funcionalidade == "Produto")
+            else if (funcionalidade == "Produtos")
             {
                 excluirProduto();
             }   
@@ -309,8 +309,8 @@ void cadastrarCliente()
     scanf("%s", &cliente.endereco);
 
     // revisar
-    printf("\n\n\tDigite algo para continuar...\t");
-    scanf("%s", &cliente.deletado);
+    // printf("\n\n\tDigite algo para continuar...\t");
+    // scanf("%s", &cliente.deletado);
 
     agora = time(NULL);
     strftime(cliente.dataRegistro, sizeof(cliente.dataRegistro), "%d.%m.%Y - %H:%M:%S", localtime( &agora ));   
@@ -511,21 +511,26 @@ void consultarCliente()
 void cadastrarProduto()
 {
     struct Produto produtos;
+
     int retorno;
+
     arq = fopen("produtos.txt", "ab");
     if (arq == NULL)
     {
         printf("Erro ao abrir arquivo");
         return;
     }
+
     printf("Digite o codigo do produto: \n");
     scanf("%d", &produtos.codigo);
+
     printf("Digite a descricao do produto: \n");
-    fflush(stdin);
-    gets(produtos.descricao);
+    scanf("%s", &produtos.descricao);
+
     printf("Digite o valor do produto: \n");
     scanf("%f", &produtos.valor);
-    retorno = fwrite (&produtos, sizeof(produtos), 1, arq);
+
+    retorno = fwrite(&produtos, sizeof(produtos), 1, arq);
     if (retorno == 1)
     {
         fclose (arq); 
@@ -544,9 +549,11 @@ void cadastrarProduto()
     }
 
 }
+
 void alterarProduto()
 {
-        arq = fopen("produtos.txt", "r+b");
+    arq = fopen("produtos.txt", "r+b");
+
     if (arq == NULL)
     {
         printf("Arquivo inexistente!");
@@ -583,6 +590,7 @@ void alterarProduto()
             montarMenu("Produtos");
         }
     }
+
     if (!encontrado)
     {
         printf("\nCodigo nao cadastrado!!\n");
@@ -590,7 +598,9 @@ void alterarProduto()
         system("cls || clear");       
         montarMenu("Produtos");
     }
+
     fclose(arq);
+
 }
 void excluirProduto()
 {
@@ -645,9 +655,11 @@ void excluirProduto()
     }
     fclose(arq);
 }
+
 void consultarProduto()
 {
     arq = fopen ("produtos.txt", "rb");
+
     if (arq == NULL)
     {
         printf("Arquivo inexistente!");
@@ -655,6 +667,7 @@ void consultarProduto()
         system("cls || clear");       
         montarMenu("Produtos");
     }
+
     struct Produto produtos;
     int cod, encontrado = 0;
     printf ("\nDigite o codigo que procura: \n");
@@ -662,25 +675,28 @@ void consultarProduto()
 
     while (fread (&produtos, sizeof(produtos), 1, arq))
     {
-        if ((cod == produtos.codigo) && (produtos.deletado != '*'))
+        if (cod == produtos.codigo)
         {
-            printf("Cod %d --- Descricao: %-8s --- Valor R$ %4.2f\n",produtos.codigo, produtos.descricao, produtos.valor);
+            printf("Cod %d --- Descricao: %-8s --- Valor R$ %4.2f\n", produtos.codigo, produtos.descricao, produtos.valor);
             encontrado = 1;
             system("pause>nul");
             system("cls || clear");        
             montarMenu("Produtos");
         }
     }
-    if (!encontrado)
+
+    if (encontrado == 0)
     {
         printf("\nCodigo nao cadastrado!!\n");
         system("pause>nul");
-        system("cls || clear");        
+        system("cls || clear");
         montarMenu("Produtos");
     }
+
     fclose(arq);
 
 }
+
 #pragma endregion Produto
 
 #pragma region Pedidos
@@ -749,7 +765,7 @@ void montarMenuPrincipal()
 {
     int opcao = 0;
     printf("\n\tMenu de Principal\n\n");
-    printf("Informe uma op��o v�lida e aperte a tecla enter\n\n");
+    printf("Informe uma opcao valida e aperte a tecla enter\n\n");
     printf("1. Menu Principal\n");
     //printf("2. Menu Operador\n");
     printf("2. Configurar Tela\n");
